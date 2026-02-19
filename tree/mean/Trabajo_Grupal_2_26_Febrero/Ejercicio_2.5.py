@@ -1,121 +1,129 @@
 """
-Ejercicio 2.5, Página 95: Definición de métodos con parámetros (Clase CuentaBancaria)
-Lenguaje: Python
+Ejercicio 2.5, Página 95:: Definición de métodos con parámetros
+Este módulo modela una Cuenta Bancaria y permite realizar operaciones 
+básicas como consignar, retirar, transferir a otras cuentas y comparar titulares.
 """
 
 from enum import Enum
 
-# ---------------------------------------------------------
-# ENUNCIADO: Clase CuentaBancaria
-# ---------------------------------------------------------
-# Se requiere un programa que modele una cuenta bancaria que posee los
-# siguientes atributos:
-# - Nombres del titular.
-# - Apellidos del titular.
-# - Número de la cuenta bancaria.
-# - Tipo de cuenta: puede ser una cuenta de ahorros o una cuenta corriente.
-# - Saldo de la cuenta.
-#
-# Requerimientos:
-# 1. Definir un constructor que inicialice los atributos de la clase.
-#    IMPORTANTE: Cuando se crea una cuenta bancaria, su saldo inicial tiene un valor de cero.
-# 2. En una determinada cuenta bancaria se puede:
-#    - Imprimir por pantalla los valores de los atributos.
-#    - Consultar el saldo.
-#    - Consignar un determinado valor (actualizando el saldo).
-#    - Retirar un determinado valor (actualizando el saldo).
-#      > Validar: No se puede retirar si el valor solicitado supera el saldo actual.
-
-class TipoCuenta(Enum):
+class tipoCuenta(Enum):
     """Enumeración para los tipos de cuenta bancaria."""
     AHORROS = "Ahorros"
     CORRIENTE = "Corriente"
 
 class CuentaBancaria:
-    """
-    Clase que define una cuenta bancaria con sus operaciones básicas.
-    """
-    def __init__(self, nombres: str, apellidos: str, numero_cuenta: str, tipo_cuenta: TipoCuenta):
-        """
-        Constructor de la cuenta bancaria.
-        Inicializa los datos del titular y la cuenta.
-        El saldo se inicializa automáticamente en 0.0.
-        """
-        self.nombres = nombres
-        self.apellidos = apellidos
-        self.numero_cuenta = numero_cuenta
-        self.tipo_cuenta = tipo_cuenta
-        self.saldo = 0.0  # Requerimiento: saldo inicial cero
+    """Clase que representa una cuenta bancaria y sus operaciones operativas."""
 
-    def imprimir_datos(self):
-        """Imprime los atributos de la cuenta bancaria."""
-        print(f"\n--- Información de la Cuenta ---")
-        print(f"Titular: {self.nombres} {self.apellidos}")
-        print(f"Número de cuenta: {self.numero_cuenta}")
-        print(f"Tipo de cuenta: {self.tipo_cuenta.value}")
+    def __init__(self, nombresTitular: str, apellidosTitular: str, numeroCuenta: int, tipo: tipoCuenta):
+        """
+        Constructor que inicializa los atributos. 
+        El saldo inicial siempre comienza en 0 según el requerimiento.
+        """
+        self.nombresTitular = nombresTitular
+        self.apellidosTitular = apellidosTitular
+        self.numeroCuenta = numeroCuenta
+        self.tipo = tipo
+        self.saldo = 0.0  # El saldo inicia en cero
+
+    def imprimir(self):
+        """Imprime por pantalla los valores de los atributos de la cuenta."""
+        print(f"\n--- Detalles de la Cuenta: {self.numeroCuenta} ---")
+        print(f"Titular: {self.nombresTitular} {self.apellidosTitular}")
+        print(f"Tipo de cuenta: {self.tipo.value}")
         print(f"Saldo actual: ${self.saldo:.2f}")
+        print("-" * 35)
 
-    def consultar_saldo(self) -> float:
-        """Retorna el saldo actual de la cuenta."""
-        return self.saldo
+    def consultarSaldo(self):
+        """Consulta e imprime el saldo actual de la cuenta."""
+        print(f"El saldo de la cuenta {self.numeroCuenta} es: ${self.saldo:.2f}")
 
-    def consignar(self, valor: float):
+    def consignar(self, valor: int) -> bool:
         """
-        Consigna (deposita) un valor en la cuenta.
-        :param valor: Cantidad monetaria a depositar (debe ser positiva).
+        Consigna un valor en la cuenta.
+        Retorna True si la operación es exitosa (valor positivo).
         """
         if valor > 0:
             self.saldo += valor
-            print(f"Consignación exitosa de ${valor:.2f}. Nuevo saldo: ${self.saldo:.2f}")
+            print(f"Se han consignado ${valor} a la cuenta {self.numeroCuenta}.")
+            return True
         else:
-            print("El valor a consignar debe ser mayor a cero.")
+            print("Error: El valor a consignar debe ser mayor a cero.")
+            return False
 
-    def retirar(self, valor: float):
+    def retirar(self, valor: int) -> bool:
         """
         Retira un valor de la cuenta si hay fondos suficientes.
-        :param valor: Cantidad monetaria a retirar.
+        Retorna True si el retiro es exitoso, False en caso contrario.
         """
         if valor <= 0:
-            print("El valor a retirar debe ser positivo.")
-            return
-
-        if valor <= self.saldo:
-            self.saldo -= valor
-            print(f"Retiro exitoso de ${valor:.2f}. Nuevo saldo: ${self.saldo:.2f}")
+            print("Error: El valor a retirar debe ser mayor a cero.")
+            return False
+        
+        if valor > self.saldo:
+            print(f"Error: Fondos insuficientes. Intenta retirar ${valor} pero su saldo es ${self.saldo}.")
+            return False
         else:
-            print(f"Error: Fondos insuficientes para retirar ${valor:.2f}. Saldo actual: ${self.saldo:.2f}")
+            self.saldo -= valor
+            print(f"Se han retirado ${valor} de la cuenta {self.numeroCuenta}.")
+            return True
 
-def main():
-    print("--- EJECUCIÓN DEL EJERCICIO 2.5: Cuenta Bancaria ---")
+    def compararCuentas(self, cuenta: 'CuentaBancaria'):
+        """
+        Compara si la cuenta actual y la cuenta pasada por parámetro 
+        pertenecen al mismo titular (mismos nombres y apellidos).
+        """
+        if (self.nombresTitular.lower() == cuenta.nombresTitular.lower() and 
+            self.apellidosTitular.lower() == cuenta.apellidosTitular.lower()):
+            print(f"Las cuentas {self.numeroCuenta} y {cuenta.numeroCuenta} pertenecen al mismo titular: {self.nombresTitular} {self.apellidosTitular}.")
+        else:
+            print(f"Las cuentas {self.numeroCuenta} y {cuenta.numeroCuenta} pertenecen a titulares diferentes.")
 
-    # 1. Crear una cuenta bancaria
-    cuenta = CuentaBancaria(
-        nombres="Pedro",
-        apellidos="Pérez",
-        numero_cuenta="123456789",
-        tipo_cuenta=TipoCuenta.AHORROS
-    )
+    def transferencia(self, cuenta: 'CuentaBancaria', valor: int):
+        """
+        Realiza una transferencia de la cuenta actual a otra cuenta.
+        Utiliza los métodos retirar y consignar para asegurar la lógica de fondos.
+        """
+        print(f"\n[ Iniciando transferencia de ${valor} de Cuenta {self.numeroCuenta} a Cuenta {cuenta.numeroCuenta} ]")
+        # Si se logra retirar el dinero de esta cuenta...
+        if self.retirar(valor):
+            # ...se consigna en la cuenta destino
+            cuenta.consignar(valor)
+            print("Transferencia completada con éxito.")
+        else:
+            print("Transferencia fallida debido a fondos insuficientes.")
 
-    # 2. Imprimir estado inicial (Saldo debe ser 0)
-    cuenta.imprimir_datos()
 
-    # 3. Consignar dinero
-    print("\n--- Realizando consignación ---")
-    cuenta.consignar(200000) # Consignar 200,000
-    
-    # 4. Consultar saldo
-    print(f"Saldo consultado: ${cuenta.consultar_saldo():.2f}")
-
-    # 5. Retirar dinero (Caso Exitoso)
-    print("\n--- Realizando retiro válido ---")
-    cuenta.retirar(50000) # Retirar 50,000
-
-    # 6. Retirar dinero (Caso Fondos Insuficientes)
-    print("\n--- Intentando retiro inválido (supera saldo) ---")
-    cuenta.retirar(300000) # Intentar retirar 300,000 (Saldo restante es 150,000)
-
-    # 7. Estado final
-    cuenta.imprimir_datos()
-
+# --- MÉTODO MAIN ---
 if __name__ == "__main__":
-    main()
+    # 1. Crear dos cuentas bancarias
+    cuenta1 = CuentaBancaria("Brayan", "Cumbalaza", 1001, tipoCuenta.AHORROS)
+    cuenta2 = CuentaBancaria("Daniel", "Maldonado", 1002, tipoCuenta.CORRIENTE)
+    cuenta3 = CuentaBancaria("Brayan", "Cumbalaza", 1003, tipoCuenta.CORRIENTE) # Otra cuenta para Brayan
+
+    # Mostrar estado inicial
+    cuenta1.imprimir()
+    cuenta2.imprimir()
+
+    # 2. Probar consignar y consultar saldo
+    print("\n--- Pruebas de Consignación ---")
+    cuenta1.consignar(50000)
+    cuenta2.consignar(100000)
+    cuenta1.consultarSaldo()
+
+    # 3. Probar retiro (exitoso y fallido)
+    print("\n--- Pruebas de Retiro ---")
+    cuenta1.retirar(20000)   # Exitoso
+    cuenta1.retirar(100000)  # Fallido (fondos insuficientes)
+
+    # 4. Probar transferencia
+    cuenta2.transferencia(cuenta1, 30000)
+    
+    # Consultar saldos tras la transferencia
+    print("\n--- Saldos después de la transferencia ---")
+    cuenta1.consultarSaldo()
+    cuenta2.consultarSaldo()
+
+    # 5. Probar comparación de cuentas
+    print("\n--- Prueba de Comparación de Cuentas ---")
+    cuenta1.compararCuentas(cuenta2) # Diferentes titulares
+    cuenta1.compararCuentas(cuenta3) # Mismo titular
