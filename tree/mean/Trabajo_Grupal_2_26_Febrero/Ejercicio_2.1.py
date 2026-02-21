@@ -3,49 +3,58 @@ Ejercicio 2.1: Página 63: Definición de clases (Clase Persona)
 Este módulo modela el concepto de una persona con sus atributos básicos
 y permite imprimir su información en pantalla.
 """
-
 class Persona:
     """
-    Clase que representa a una persona.
+    Clase que modela el concepto de una persona.
     """
-
-    def __init__(self, nombre: str, apellidos: str, numero_documento_identidad: str, año_nacimiento: int):
-        """
-        Constructor de la clase Persona. Inicializa los atributos de la persona.
-        
-        Parámetros:
-        nombre (str): El nombre de la persona.
-        apellidos (str): Los apellidos de la persona.
-        numero_documento_identidad (str): El número de documento de identidad.
-        año_nacimiento (int): El año de nacimiento de la persona.
-        """
-        # En Python, 'self' cumple la misma función que 'this' en Java
+    def __init__(self, nombre: str, apellido: str, numero_documento: str, ano_nacimiento: int):
+        # El constructor inicializa los valores de los atributos
         self.nombre = nombre
-        self.apellidos = apellidos
-        self.numero_documento_identidad = numero_documento_identidad
-        self.año_nacimiento = año_nacimiento
+        self.apellido = apellido
+        self.numero_documento = numero_documento
+        self.ano_nacimiento = ano_nacimiento
 
-    def imprimir(self):
+    def imprimir_informacion(self):
         """
-        Imprime en pantalla los valores de los atributos del objeto Persona.
-        Corresponde al método void imprimir() del diagrama UML.
+        Método para imprimir en pantalla los valores de los atributos del objeto.
         """
         print(f"Nombre: {self.nombre}")
-        print(f"Apellidos: {self.apellidos}")
-        print(f"Número de Documento de Identidad: {self.numero_documento_identidad}")
-        print(f"Año de Nacimiento: {self.año_nacimiento}")
-        print("-" * 30) # Línea separadora para mayor claridad en consola
+        print(f"Apellido: {self.apellido}")
+        print(f"Documento de Identidad: {self.numero_documento}")
+        print(f"Año de Nacimiento: {self.ano_nacimiento}")
+        print("-" * 30)
 
 
-# Método main simulado en Python
+def main():
+    print("=== SISTEMA DE REGISTRO DE PERSONAS ===")
+    personas = []
+
+    # Se requiere crear dos personas mediante captura de datos por teclado
+    for i in range(1, 3):
+        print(f"\n--- Ingrese los datos de la Persona {i} ---")
+        nombre = input("Nombre: ")
+        apellido = input("Apellido: ")
+        numero_documento = input("Número de Documento: ")
+        
+        # Validación básica para asegurar que el año sea numérico
+        while True:
+            try:
+                ano_nacimiento = int(input("Año de Nacimiento (ej. 1995): "))
+                break
+            except ValueError:
+                print("Error: Por favor, ingrese un año válido (solo números).")
+        
+        # Instanciamos el objeto Persona y lo agregamos a nuestra lista
+        persona_instancia = Persona(nombre, apellido, numero_documento, ano_nacimiento)
+        personas.append(persona_instancia)
+
+    print("\n=== INFORMACIÓN REGISTRADA ===")
+    # Recorremos la lista para mostrar la información de las dos personas creadas
+    for idx, persona in enumerate(personas, 1):
+        print(f"\nMostrando datos de la Persona {idx}:")
+        persona.imprimir_informacion()
+
+
+# Punto de entrada del programa
 if __name__ == "__main__":
-    # 1. Se crean dos objetos de la clase Persona
-    persona1 = Persona("Brayan", "Cumbalaza Vallejo", "1000123456", 2003)
-    persona2 = Persona("Daniel", "Maldonado Zuluaga", "1000654321", 2002)
-
-    # 2. Se muestran los valores de sus atributos en pantalla llamando al método imprimir
-    print("--- Información de la Persona 1 ---")
-    persona1.imprimir()
-
-    print("--- Información de la Persona 2 ---")
-    persona2.imprimir()
+    main()

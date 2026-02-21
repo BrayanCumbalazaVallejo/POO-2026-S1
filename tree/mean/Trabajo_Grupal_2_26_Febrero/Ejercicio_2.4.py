@@ -7,102 +7,135 @@ y calcula sus respectivas áreas y perímetros.
 import math
 
 class Circulo:
-    def __init__(self, radio: int):
+    """Modela un círculo geométrico."""
+    def __init__(self, radio: float):
         self.radio = radio
 
-    def calcularArea(self) -> float:
-        # Área del círculo = pi * radio^2
-        return math.pi * math.pow(self.radio, 2)
+    def calcular_area(self) -> float:
+        return math.pi * (self.radio ** 2)
 
-    def calcularPerimetro(self) -> float:
-        # Perímetro del círculo = 2 * pi * radio
+    def calcular_perimetro(self) -> float:
         return 2 * math.pi * self.radio
 
-
 class Rectangulo:
-    def __init__(self, base: int, altura: int):
+    """Modela un rectángulo geométrico."""
+    def __init__(self, base: float, altura: float):
         self.base = base
         self.altura = altura
 
-    def calcularArea(self) -> float:
-        # Área del rectángulo = base * altura
+    def calcular_area(self) -> float:
         return self.base * self.altura
 
-    def calcularPerimetro(self) -> float:
-        # Perímetro = (2 * base) + (2 * altura)
-        return (2 * self.base) + (2 * self.altura)
-
+    def calcular_perimetro(self) -> float:
+        return 2 * (self.base + self.altura)
 
 class Cuadrado:
-    def __init__(self, lado: int):
+    """Modela un cuadrado geométrico."""
+    def __init__(self, lado: float):
         self.lado = lado
 
-    def calcularArea(self) -> float:
-        # Área del cuadrado = lado^2
-        return self.lado * self.lado
+    def calcular_area(self) -> float:
+        return self.lado ** 2
 
-    def calcularPerimetro(self) -> float:
-        # Perímetro = 4 * lado
+    def calcular_perimetro(self) -> float:
         return 4 * self.lado
 
-
 class TrianguloRectangulo:
-    def __init__(self, base: int, altura: int):
+    """Modela un triángulo rectángulo."""
+    def __init__(self, base: float, altura: float):
         self.base = base
         self.altura = altura
 
-    def calcularArea(self) -> float:
-        # Área del triángulo = (base * altura) / 2
+    def calcular_area(self) -> float:
         return (self.base * self.altura) / 2
 
-    def calcularPerimetro(self) -> float:
-        # Perímetro = base + altura + hipotenusa
-        return self.base + self.altura + self.calcularHipotenusa()
+    def calcular_hipotenusa(self) -> float:
+        # Teorema de Pitágoras: c = raíz(a^2 + b^2)
+        return math.sqrt((self.base ** 2) + (self.altura ** 2))
 
-    def calcularHipotenusa(self) -> float:
-        # Teorema de Pitágoras: hipotenusa = raíz(base^2 + altura^2)
-        return math.sqrt(math.pow(self.base, 2) + math.pow(self.altura, 2))
+    def calcular_perimetro(self) -> float:
+        return self.base + self.altura + self.calcular_hipotenusa()
 
-    def determinarTipoTriangulo(self):
-        hipotenusa = self.calcularHipotenusa()
+    def determinar_tipo_triangulo(self) -> str:
+        """
+        Determina si el triángulo es Equilátero, Isósceles o Escaleno
+        basándose en las longitudes de sus tres lados.
+        """
+        hipotenusa = self.calcular_hipotenusa()
         
-        # Condicionales usando el operador lógico 'and' (equivalente a && en Java)
-        if (self.base == self.altura) and (self.base == hipotenusa) and (self.altura == hipotenusa):
-            print("Es un triángulo equilátero")
-        elif (self.base != self.altura) and (self.base != hipotenusa) and (self.altura != hipotenusa):
-            print("Es un triángulo escaleno")
+        # Redondeamos ligeramente para evitar problemas de precisión con los flotantes
+        lados = [round(self.base, 4), round(self.altura, 4), round(hipotenusa, 4)]
+        lados_unicos = len(set(lados))
+        
+        if lados_unicos == 1:
+            return "Equilátero" # (Nota matemática: Un triángulo rectángulo real no puede ser equilátero)
+        elif lados_unicos == 2:
+            return "Isósceles"
         else:
-            print("Es un triángulo isósceles")
+            return "Escaleno"
 
+# --- FUNCIÓN PRINCIPAL ---
 
-# --- CLASE DE PRUEBA (main) ---
-if __name__ == "__main__":
-    print("--- Prueba de Figuras Geométricas ---")
+def main():
+    print("=== SISTEMA DE CÁLCULO DE FIGURAS GEOMÉTRICAS ===")
     
-    # 1. Crear las cuatro figuras con datos de prueba
-    figura1 = Circulo(2)
-    figura2 = Rectangulo(1, 2)
-    figura3 = Cuadrado(3)
-    figura4 = TrianguloRectangulo(3, 5)
+    # Captura de datos para el Círculo
+    print("\n--- Datos del Círculo ---")
+    while True:
+        try:
+            radio = float(input("Ingrese el radio del círculo (en cm): "))
+            circulo = Circulo(radio)
+            break
+        except ValueError:
+            print("Error: Ingrese un valor numérico.")
 
-    # 2. Probar métodos del Círculo
-    print("\n[ Círculo ]")
-    print(f"Área = {figura1.calcularArea():.2f}")
-    print(f"Perímetro = {figura1.calcularPerimetro():.2f}")
+    # Captura de datos para el Rectángulo
+    print("\n--- Datos del Rectángulo ---")
+    while True:
+        try:
+            base_rect = float(input("Ingrese la base del rectángulo (en cm): "))
+            altura_rect = float(input("Ingrese la altura del rectángulo (en cm): "))
+            rectangulo = Rectangulo(base_rect, altura_rect)
+            break
+        except ValueError:
+            print("Error: Ingrese valores numéricos.")
 
-    # 3. Probar métodos del Rectángulo
-    print("\n[ Rectángulo ]")
-    print(f"Área = {figura2.calcularArea():.2f}")
-    print(f"Perímetro = {figura2.calcularPerimetro():.2f}")
+    # Captura de datos para el Cuadrado
+    print("\n--- Datos del Cuadrado ---")
+    while True:
+        try:
+            lado_cuad = float(input("Ingrese el lado del cuadrado (en cm): "))
+            cuadrado = Cuadrado(lado_cuad)
+            break
+        except ValueError:
+            print("Error: Ingrese un valor numérico.")
 
-    # 4. Probar métodos del Cuadrado
-    print("\n[ Cuadrado ]")
-    print(f"Área = {figura3.calcularArea():.2f}")
-    print(f"Perímetro = {figura3.calcularPerimetro():.2f}")
+    # Captura de datos para el Triángulo Rectángulo
+    print("\n--- Datos del Triángulo Rectángulo ---")
+    while True:
+        try:
+            base_tri = float(input("Ingrese la base del triángulo (en cm): "))
+            altura_tri = float(input("Ingrese la altura del triángulo (en cm): "))
+            triangulo = TrianguloRectangulo(base_tri, altura_tri)
+            break
+        except ValueError:
+            print("Error: Ingrese valores numéricos.")
 
-    # 5. Probar métodos del Triángulo Rectángulo
-    print("\n[ Triángulo Rectángulo ]")
-    print(f"Área = {figura4.calcularArea():.2f}")
-    print(f"Perímetro = {figura4.calcularPerimetro():.2f}")
-    print(f"Hipotenusa = {figura4.calcularHipotenusa():.2f}")
-    figura4.determinarTipoTriangulo()
+    # Mostrar Resultados
+    print("\n" + "="*45)
+    print("             RESULTADOS FINALES")
+    print("="*45)
+
+    print(f"\n[CÍRCULO] Área: {circulo.calcular_area():.2f} cm² | Perímetro: {circulo.calcular_perimetro():.2f} cm")
+    print(f"[RECTÁNGULO] Área: {rectangulo.calcular_area():.2f} cm² | Perímetro: {rectangulo.calcular_perimetro():.2f} cm")
+    print(f"[CUADRADO] Área: {cuadrado.calcular_area():.2f} cm² | Perímetro: {cuadrado.calcular_perimetro():.2f} cm")
+    
+    print("\n[TRIÁNGULO RECTÁNGULO]")
+    print(f"  - Área: {triangulo.calcular_area():.2f} cm²")
+    print(f"  - Perímetro: {triangulo.calcular_perimetro():.2f} cm")
+    print(f"  - Hipotenusa: {triangulo.calcular_hipotenusa():.2f} cm")
+    print(f"  - Tipo de Triángulo: {triangulo.determinar_tipo_triangulo()}")
+    print("="*45)
+
+if __name__ == "__main__":
+    main()
